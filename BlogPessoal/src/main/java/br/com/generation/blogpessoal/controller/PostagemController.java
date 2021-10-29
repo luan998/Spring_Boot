@@ -43,6 +43,7 @@ public class PostagemController {
 	
 	@GetMapping("/titulo/{titulo}") //nome do titulo e da variavel para saber qual parametro passa(entre chaves)
 	public ResponseEntity <List<Postagem>> getByTitulo(@PathVariable String titulo){ 
+		
 		return ResponseEntity.ok(postagemRepository.findAllByTituloContainingIgnoreCase(titulo));
 	}
 	
@@ -56,7 +57,7 @@ public class PostagemController {
 		return ResponseEntity.status(HttpStatus.OK).body(postagemRepository.save(postagem));
 	}
 	
-	@DeleteMapping
+	@DeleteMapping("/{id}")
 	public void deletePostagem(@PathVariable long id) {
 		postagemRepository.deleteById(id);
 	}
