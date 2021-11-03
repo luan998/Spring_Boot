@@ -50,16 +50,26 @@ public class PostagemController {
 	@PostMapping								//pega o corpo da requisição e transforma no tipo postagem
 	public ResponseEntity<Postagem> postPostagem(@RequestBody Postagem postagem){
 		return ResponseEntity.status(HttpStatus.CREATED).body(postagemRepository.save(postagem));
+	
+		
 	}
 	
 	@PutMapping								
 	public ResponseEntity<Postagem> putPostagem(@RequestBody Postagem postagem){
-		return ResponseEntity.status(HttpStatus.OK).body(postagemRepository.save(postagem));
+		return postagemRepository.findById(postagem.getId())
+				.map(resposta -> ResponseEntity.ok(postagemRepository.save(postagem)))
+				.orElse(ResponseEntity.notFound().build());
 	}
 	
+	
 	@DeleteMapping("/{id}")
-	public void deletePostagem(@PathVariable long id) {
-		postagemRepository.deleteById(id);
+	public ResponseEntity<?> deletePostagem(@PathVariable long id) {
+		return postagemRepository.findById(id)
+		.map(resposta-> {
+			postagemRepository.deleteById(id);
+			return ResponseEntity.ok().build();
+		})
+		.orElse(ResponseEntity.notFound().build());
 	}
 	
 }
