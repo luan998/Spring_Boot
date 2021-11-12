@@ -34,6 +34,13 @@ public class ProdutoController {
 		return ResponseEntity.ok(produtoRepository.findAll());
 	}
 	
+	@GetMapping("/{id}")
+	public ResponseEntity<Produto> getById(@PathVariable long id){
+		return produtoRepository.findById(id)
+			.map(resp -> ResponseEntity.ok(resp))
+			.orElse(ResponseEntity.notFound().build());
+	}
+	
 	@GetMapping("/nome/{nome}")
 	public ResponseEntity<List<Produto>> getByNome(@PathVariable String nome){
 		return ResponseEntity.ok(produtoRepository.findAllByNomeContainingIgnoreCase(nome));
@@ -54,7 +61,7 @@ public class ProdutoController {
 	@DeleteMapping("/{id}")
 	public ResponseEntity<?> deleteProduto(@PathVariable long id){
 		return produtoRepository.findById(id)
-				.map(reposta -> {
+				.map(resposta -> {
 					produtoRepository.deleteById(id);
 					return ResponseEntity.ok().build();
 				})
