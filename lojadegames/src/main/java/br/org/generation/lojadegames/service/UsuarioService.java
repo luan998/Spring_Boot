@@ -1,6 +1,8 @@
 package br.org.generation.lojadegames.service;
 
 import java.nio.charset.Charset;
+import java.time.LocalDate;
+import java.time.Period;
 import java.util.Optional;
 
 import org.apache.tomcat.util.codec.binary.Base64;
@@ -16,7 +18,8 @@ import br.org.generation.lojadegames.repository.UsuarioRepository;
 
 @Service
 public class UsuarioService {
-
+	
+	
 	@Autowired
 	private UsuarioRepository usuarioRepository;
 	
@@ -25,6 +28,10 @@ public class UsuarioService {
 		if (usuarioRepository.findByUsuario(usuario.getUsuario()).isPresent())
 			throw new ResponseStatusException(
 						HttpStatus.BAD_REQUEST, "O Usuário já existe!", null);
+		
+		if(calcularIdade(usuario.getDtNascimento())<18)
+			throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O usuário é menor de idade", null);
+		
 		
 		usuario.setSenha(criptografarSenha(usuario.getSenha()));
 
@@ -56,6 +63,7 @@ public class UsuarioService {
 				String token = gerarBasicToken(usuarioLogin.get().getUsuario(), usuarioLogin.get().getSenha());
 				usuarioLogin.get().setId(usuario.get().getId());
 				usuarioLogin.get().setNome(usuario.get().getNome());
+				usuarioLogin.get().setDtNascimento(usuario.get().getDtNascimento());
 				usuarioLogin.get().setSenha(usuario.get().getSenha());
 				usuarioLogin.get().setToken(token);
 				
@@ -88,5 +96,9 @@ public class UsuarioService {
 		byte[] tokenBase64 = Base64.encodeBase64(token.getBytes(Charset.forName("US-ASCII")));
 		return "Basic " + new String(tokenBase64);
 
+	}
+	
+	private int calcularIdade(LocalDate dataNascimento) {
+		return Period.between(dataNascimento, LocalDate.now()).getYears();
 	}
 }

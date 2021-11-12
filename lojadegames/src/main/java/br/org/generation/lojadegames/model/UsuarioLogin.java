@@ -2,7 +2,6 @@ package br.org.generation.lojadegames.model;
 
 import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 
 public class UsuarioLogin {
 
@@ -10,8 +9,8 @@ public class UsuarioLogin {
 	
 	private String nome;
 	
-	/*@JsonFormat(pattern="yyyy-MM-dd")
-	private LocalDate dtNascimento;*/
+	
+	private LocalDate dtNascimento;
 	
 	private String usuario;
 	
@@ -35,13 +34,13 @@ public class UsuarioLogin {
 		this.nome = nome;
 	}
 
-	/*public LocalDate getDtNascimento() {
+	public LocalDate getDtNascimento() {
 		return dtNascimento;
 	}
 
 	public void setDtNascimento(LocalDate dtNascimento) {
 		this.dtNascimento = dtNascimento;
-	}*/
+	}
 
 	public String getUsuario() {
 		return usuario;

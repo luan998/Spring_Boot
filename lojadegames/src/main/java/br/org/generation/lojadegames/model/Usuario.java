@@ -25,9 +25,11 @@ public class Usuario {
 	@NotNull(message = "O nome não pode ser nuilo")
 	@Size(min = 2, max = 100, message = "tamanho de nome inválido")
 	private String nome;
-	/*
+	
+	
 	@JsonFormat(pattern="yyyy-MM-dd")
-	private LocalDate dtNascimento;*/
+	@NotNull(message = "O atribuo data de nascimento é obrigatório!")
+	private LocalDate dtNascimento;
 	
 	@NotNull(message = "O usuário não pode ficar em branco")
 	@Email(message = "O email é inválido")
@@ -53,13 +55,13 @@ public class Usuario {
 		this.nome = nome;
 	}
 
-	/*public LocalDate getDtNascimento() {
+	public LocalDate getDtNascimento() {
 		return dtNascimento;
 	}
 
 	public void setDtNascimento(LocalDate dtNascimento) {
 		this.dtNascimento = dtNascimento;
-	}*/
+	}
 
 	public String getUsuario() {
 		return usuario;
