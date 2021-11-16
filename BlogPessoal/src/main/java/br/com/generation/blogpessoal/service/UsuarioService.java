@@ -5,8 +5,10 @@ import java.util.Optional;
 
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import br.com.generation.blogpessoal.model.Usuario;
 import br.com.generation.blogpessoal.model.UsuarioLogin;
@@ -21,7 +23,8 @@ public class UsuarioService {
 	public Optional<Usuario> cadastrarUsuario(Usuario usuario) {
 
 		if (usuarioRepository.findByUsuario(usuario.getUsuario()).isPresent())
-			return Optional.empty();
+			throw new ResponseStatusException(
+					HttpStatus.BAD_REQUEST, "O Usuário já existe!", null);
 
 		usuario.setSenha(criptografarSenha(usuario.getSenha()));
 
@@ -33,6 +36,12 @@ public class UsuarioService {
 
 		if (usuarioRepository.findById(usuario.getId()).isPresent()) {
 			
+			Optional<Usuario> buscaUsuario = usuarioRepository.findByUsuario(usuario.getUsuario());
+			
+			if( buscaUsuario.isPresent()) {
+				if(buscaUsuario.get().getId() != usuario.getId())
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "O usuário já existe",null);
+			}
 			usuario.setSenha(criptografarSenha(usuario.getSenha()));
 
 			return Optional.of(usuarioRepository.save(usuario));
